@@ -1,0 +1,44 @@
+%% Introduction
+% * Author:                  Lupe Jimenez
+% * Class:                    ESE 351
+% * Date:                     Created 
+% * With contributions from: 
+clc
+clear all
+close all
+
+%%part 1
+
+%plug in given values of circuit
+R=1000;
+C=5e-6;
+tau= R*C;
+
+fs= 44100; %frequency (standard audio sampling rate)
+ts=0:1/fs:15*tau; %time sample frequency(given:15*tau)
+delta_t=1/fs; %given deltaT=1/fs
+
+%create treble boost using high pass 910 Hertz
+
+%high pass 
+Vin_H=ones(size(t,2),1);
+a2=[1 -(1-delta_t/tau)];% coefficients of Vin terms High  pass
+b2=[1 -1];%coefficients of Vout terms; High pass
+High_pass = filter(b2, a2,Vin_H); % Simulate system
+
+%low pass 
+a1=[1 -(1-delta_t/tau)];% coefficients of Vin terms low pass*
+b1=[delta_t/tau];%coefficients of Vout terms; low pass
+Vin_L=ones(size(t,2),1);
+Low_pass=filter(b1, a1, Vin_L);
+
+%create unity using bandpass combination of low and high 230-910 Hertz
+% cut off frequency of the LPF is higher than the cut off frequency of the high pass filter, 
+% select range of the frequencies to pass through
+Low_pass=filter(b1, a1, Vin_L);
+High_pass = filter(b2, a2,Vin_H); % Simulate system
+
+
+%create bass boost using low pass 60 hertz-230
+
+Low_pass=filter(b1, a1, Vin_L);
