@@ -1,24 +1,31 @@
+clc
+clear all
+close all
+
+% Case Study 1 - Demo
 
 % load noisy audio data, then play recording
 [xv,xvfs] = audioread('BeyondTheSea.wav'); 
 xv=xv(:,1);
 % no of points in the data
 ly=length(xv);
-ty=([1:ly]'-1)/xvfs;
-w=([1:ly]'-1)/ly*xvfs;
-w=w(1:ly/2);
-
 %in Hz, single-sided spectrum
 fxv=abs(fft(xv));
 fy=fxv(1:ly/2)/xvfs;
 % show time-domain waveform
 t = [0:length(xv)-1]*1/xvfs; 
 
+
 %910 hertz
 
 R= 174.8955;
 C=1e-6;
 tau= R*C;
+
+fs= 44100; %frequency (standard audio sampling rate)
+ts=0:1/fs:15*tau; %time sample frequency(given:15*tau)
+delta_t=1/fs; %given deltaT=1/fs
+Signal_in=xv;
 
 Signal_in=xv;
 
@@ -68,26 +75,46 @@ Bandpass2=filter(b1, a1, High_pass2);
 %for vector to have the same legnth
 L=500:499+ly;
 % cutoff freq =
-z1=conv(Bandpass1,xv);z1=z1(L);%3000 hertz cut off
-z2=conv(Bandpass2,xv);z2=z2(L);%14000 hertz cut off
+z5=conv(Bandpass1,xv);z5=z5(L);%3000 hertz cut off
+z6=conv(Bandpass2,xv);z6=z6(L);%14000 hertz cut off
 %
-done=0;
-coef=input('enter equalization coefficients [low, mid-low, mid-hi, hi]: ');
-if isempty(coef),coef=[1 1 1 1];end
+coef=[1 500 1];
 
 % extract the signal in each of the frequency band: 230-910,910-3000,
 % multiply each with the corresponding equalizer coeffs
 % entered and add up the scaled signal
 %
-yx=[z1 z2-z1 xv-z2]*coef';
-fx=abs(fft(yx));fx=fx(1:ly/2)/xvfs;
-figure
-loglog(w, fy, w,fx,'--');
-legend('orignal','equalized signal')
-xlabel('f (Hz)');
-ylabel('|Y(f)|');
-disp('original')
-sound(xv,xvfs)
-pause(5)
+yx=[z5 z6-z5 xv-z6]*coef';
+
+%
+figure(); 
+subplot(2,1,1)
+plot(t,xv), title("original")
+xlabel('t, seconds')
+ylabel('amplitude')
+subplot(2,1,2)
+plot(t,yx),title(" filter pass")
+xlabel('t, seconds')
+ylabel('amplitude')
+
+%sound(High_pass,xvfs)
+% show transform 
+figure()
+subplot(2,1,1)
+f = [0:length(xv)-1]*xvfs/length(xv);
+XV = fft(xv); 
+ plot(f,abs(XV));title("original")
+xlabel('f, Hz')
+ylabel('|X(f)|')
+subplot(2,1,2)
+f = [0:length(yx)-1]*xvfs/length(yx);
+XV = fft(yx); 
+ plot(f,abs(XV));title(" filter pass")
+xlabel('f, Hz')
+ylabel('|X(f)|')
+%
+sound(yx,xvfs)
+% stereoSound = yx(:, 1:2); % Extract first two channels and ignore remaining 499 channels.
+% soundsc(stereoSound,xvfs);pause(5)
 
 
