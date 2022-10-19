@@ -1,0 +1,43 @@
+
+%230 hertz low pass circuit
+R=692;
+C=1e-6;
+tau= R*C;
+fs= 44100; %frequency (standard audio sampling rate)
+ts=0:1/fs:15*tau; %time sample frequency(given:15*tau)
+t=0:1/fs:15; %time sample frequency(given:15*tau)
+delta_t=1/fs; %given deltaT=1/fs
+% 
+% Vin3=ones(size(ts,2),1);
+N=457;
+% %part b (iii)compute using isim 
+Vin3= [1 zeros(1,N)];  
+
+%y = lsim([1], [m c k], u, t); 
+
+a1=[1 1/tau];% coefficients of Vin terms High  pass
+b1=[1/tau];%coefficients of Vout terms; High passy1 = lsim(b1,a1,Vin3,ts);
+y1 = lsim(b1,a1,Vin3,ts);
+figure()
+plot(ts,y1), title("impulse response of 230 hertz low pass circuit"), xlabel("Time (s)"),
+ylabel("Voltage (V)")
+%
+%60 hertz low pass circuit
+R=2652.58;
+C=1e-6;
+tau= R*C;
+fs= 44100; %frequency (standard audio sampling rate)
+ts=0:1/fs:15*tau; %time sample frequency(given:15*tau)
+t=0:1/fs:15; %time sample frequency(given:15*tau)
+delta_t=1/fs; %given deltaT=1/fs
+
+N=1754;
+% %part b (iii)compute using isim 
+Vin3= [1 zeros(1,N)];  
+
+a1=[1 1/tau];% coefficients of Vin terms High  pass
+b1=[1/tau];%coefficients of Vout terms; High passy1 = lsim(b1,a1,Vin3,ts);
+y1 = lsim(b1,a1,Vin3,ts);
+figure()
+plot(ts,y1), title("impulse response of 230 hertz low pass circuit"), xlabel("Time (s)"),
+ylabel("Voltage (V)")
