@@ -1,0 +1,100 @@
+%910 hertz
+
+R= 174.8955;
+C=1e-6;
+tau= R*C;
+
+fs= 44100; %frequency (standard audio sampling rate)
+ts=0:1/fs:15*tau; %time sample frequency(given:15*tau)
+delta_t=1/fs; %given deltaT=1/fs
+Signal_in=xv;
+
+f1= 100;%frequency in hertz
+omega1=2*pi*f1;
+signal_in10000=exp(j*omega1*ts);% Vin-complex exponential
+
+f4= 1000;%frequency in hertz
+omega2=2*pi*f4;
+signal_in10=exp(j*omega2*ts);% Vin-complex exponential
+
+%high pass 
+a2=[1 -(1-delta_t/tau)];% coefficients of Vin terms High  pass
+b2=[1 -1];%coefficients of Vout terms; High pass
+High_pass = filter(b2, a2,signal_in10000); % Simulate system
+High2_pass = filter(b2, a2,signal_in10); 
+%230 hertz
+R= 691.9780;
+C=1e-6;
+tau= R*C;
+
+%low pass 
+a1=[1 -(1-delta_t/tau)];% coefficients of Vin terms low pass*
+b1=[delta_t/tau];%coefficients of Vout terms; low pass
+Bandpass1=filter(b1, a1, High_pass);
+Bandpass_1=filter(b1, a1, High2_pass);
+
+%magnitude of Low pass
+figure()
+H5 =Bandpass1./signal_in10000;
+H6 =Bandpass_1./signal_in10;
+subplot(4,1,1)
+plot(ts,abs(H5))
+title("f: 100 hz magnitude:  Bandpass  910 Hz")
+subplot(4,1,2)
+plot(pi*angle((H5/pi)))
+title("f: 100 hz phase angle: Bandpass pass  910 Hz"), xlabel(""),ylabel("")
+subplot(4,1,3)
+plot(ts,abs(H6))
+title("f: 1000 hz magnitude: Bandpass pass  910 Hz")
+subplot(4,1,4)
+plot(pi*angle((H6/pi)))
+title("f: 1000 hz phase angle: Bandpass  910 Hz"), xlabel(""),ylabel("")
+
+
+f1= 1000;%frequency in hertz
+omega1=2*pi*f1;
+signal_in10000=exp(j*omega1*ts);% Vin-complex exponential
+
+f4= 2000;%frequency in hertz
+omega2=2*pi*f4;
+signal_in10=exp(j*omega2*ts);% Vin-complex exponential
+
+%2nd bandpass
+%3000 hertz
+R=53.0516;
+C=1e-6;
+tau= R*C;
+
+%high pass 
+a2=[1 -(1-delta_t/tau)];% coefficients of Vin terms High  pass
+b2=[1 -1];%coefficients of Vout terms; High pass
+High_pass2 = filter(b2, a2,signal_in10000); % Simulate system
+High2_pass2 = filter(b2, a2,signal_in10); % Simulate system
+%910 hertz
+
+R= 174.8955;
+C=1e-6;
+tau= R*C;
+
+%low pass 
+a1=[1 -(1-delta_t/tau)];% coefficients of Vin terms low pass*
+b1=[delta_t/tau];%coefficients of Vout terms; low pass
+Bandpass2=filter(b1, a1, High_pass2);
+Bandpass_2=filter(b1, a1, High2_pass2);
+%magnitude of Low pass
+figure()
+H7 =Bandpass2./signal_in10000;
+H8 =Bandpass_2./signal_in10;
+subplot(4,1,1)
+plot(ts,abs(H7))
+title("f: 1000 hz magnitude:  Bandpass  3000 Hz")
+subplot(4,1,2)
+plot(pi*angle((H7/pi)))
+title("f: 1000 hz phase angle: Bandpass pass  3000 Hz"), xlabel(""),ylabel("")
+subplot(4,1,3)
+plot(ts,abs(H8))
+title("f: 2000 hz magnitude: Bandpass pass  3000 Hz")
+subplot(4,1,4)
+plot(pi*angle((H8/pi)))
+title("f: 2000 hz phase angle: Bandpass  910 Hz"), xlabel(""),ylabel("")
+
