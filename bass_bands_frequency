@@ -17,8 +17,8 @@ t = [0:length(xv)-1]*1/xvfs;
 
 w = logspace(-1,1);
 %230 hertz low pass circuit
-R=70000;
-C=1e-9;
+R=692;
+C=1e-6;
 tau= R*C;
 
 
