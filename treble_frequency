@@ -8,12 +8,6 @@ ts=0:1/fs:15*tau; %time sample frequency(given:15*tau)
 delta_t=1/fs; %given deltaT=1/fs
 
 
-%high pass 
-a2=[1 -(1-delta_t/tau)];% coefficients of Vin terms High  pass
-b2=[1 -1];%coefficients of Vout terms; High pass
-High_pass = filter(b2, a2,Signal_in); % Simulate system
-
-
 f1= 100;%frequency in hertz
 omega1=2*pi*f1;
 signal_in10000=exp(j*omega1*ts);% Vin-complex exponential
