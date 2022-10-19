@@ -1,0 +1,46 @@
+clc
+clear all
+close all
+
+% load noisy audio data, then play recording
+[xv,xvfs] = audioread('BeyondTheSea.wav'); 
+xv=xv(:,1);
+% no of points in the data
+
+ly=length(xv);
+
+%in Hz, single-sided spectrum
+fxv=abs(fft(xv));
+fy=fxv(1:ly/2)/xvfs;
+% show time-domain waveform
+t = [0:length(xv)-1]*1/xvfs; 
+
+w = logspace(-1,1);
+%230 hertz low pass circuit
+R=692;
+C=1e-6;
+tau= R*C;
+
+
+fs= 44100; %frequency (standard audio sampling rate)
+ts=0:1/fs:15*tau; %time sample frequency(given:15*tau)
+delta_t=1/fs; %given deltaT=1/fs
+
+
+%low pass 
+a1=[1 -(1-delta_t/tau)];% coefficients of Vin terms low pass*
+b1=[delta_t/tau];%coefficients of Vout terms; low pass
+
+figure()
+freqs(b1,a1,w)
+
+%60 hertz low pass circuit
+R2=2652.58;
+C2=1e-6;
+tau= R2*C2;
+%2nd low pass
+%low pass 
+a2=[1 -(1-delta_t/tau)];% coefficients of Vin terms low pass*
+b2=[delta_t/tau];%coefficients of Vout terms; low pass
+figure()
+freqs(b2,a2,w)
