@@ -1,0 +1,55 @@
+%3000 hertz high pass circuit
+R=53;
+C=1e-6;
+tau= R*C;
+fs= 44100; %frequency (standard audio sampling rate)
+ts=0:1/fs:15*tau; %time sample frequency(given:15*tau)
+delta_t=1/fs; %given deltaT=1/fs
+
+
+f1= 10;%frequency in hertz
+omega1=2*pi*f1;
+signal_in10000=exp(j*omega1*ts);% Vin-complex exponential
+ly=length(signal_in10000);
+
+%high pass 
+a2=[1 -(1-delta_t/tau)];% coefficients of Vin terms High  pass
+b2=[1 -1];%coefficients of Vout terms; High pass
+High_pass = filter(b2, a2,signal_in10000); % Simulate system
+
+%14000 hertz high pass circuit
+R=11.4;
+C=1e-6;
+tau= R*C;
+
+%high pass 
+a2=[1 -(1-delta_t/tau)];% coefficients of Vin terms High  pass
+b2=[1 -1];%coefficients of Vout terms; High pass
+High_pass2 = filter(b2, a2,signal_in10000); % Simulate system
+
+
+%for vector to have the same legnth
+L=500:499+ly;
+
+% cutoff freq =
+z7=conv(High_pass,signal_in10000);z1=z1(L);%230 hertz cut-off
+z8=conv(High_pass2,signal_in10000);z2=z2(L);%60 hertz low pass circuit
+%
+% coef=[1 1];
+% extract the signal in each of the frequency band: 0~60, 60~230,
+% multiply each with the corresponding equalizer coeffs
+% entered and add up the scaled signal
+%
+yx=[z1 z2-z1];
+
+figure()
+% bode(yx,ts);
+% %
+% H1 = yx./signal_in10000;
+% subplot(2,1,1)
+% plot(abs(H1))
+% title("f: 100 hz magnitude: Low pass  60 Hz")
+% subplot(2,1,2)
+% plot(pi*angle((H1/pi)))
+% title("f: 100 hz phase angle: Low pass  60 Hz"), xlabel(""),ylabel("")
+
