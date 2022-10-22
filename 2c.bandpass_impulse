@@ -24,9 +24,7 @@ tau= R*C;
 a2=[1 1/tau];% coefficients of Vin terms low  pass
 b2=[1/tau];%coefficients of Vout terms; low passy1 = lsim(b1,a1,Vin3,ts);
 y2 = lsim(b2,a2,y1,ts);
-figure()
-plot(ts,y2), title("impulse response of 230-910 hertz Bandpass circuit"), xlabel("Time (s)"),
-ylabel("Voltage (V)")
+
 %2nd bandpass
 %3000 hertz
 R=53.0516;
@@ -42,21 +40,9 @@ Vin3= [1 zeros(1,N)];
 
 a1=[1 1/tau];% coefficients of Vin terms High pass
 b1=[1 0];%coefficients of Vout terms; High pass
-y1 = lsim(b1,a1,Vin3,ts);
+y3 = lsim(b1,a1,Vin3,ts);
 
 %high pass 
 a2=[1 -(1-delta_t/tau)];% coefficients of Vin terms High  pass
 b2=[1 -1];%coefficients of Vout terms; High pass
-High_pass2 = filter(b2, a2,Vin3); % Simulate system
-
-%910 hertz
-R= 174.8955;
-C=1e-6;
-tau= R*C;
-%low pass 
-a1=[1 -(1-delta_t/tau)];% coefficients of Vin terms low pass*
-b1=[delta_t/tau];%coefficients of Vout terms; low pass
-Bandpass2=filter(b1, a1, High_pass2);
-figure()
-plot(ts,Bandpass2), title("impulse response of 910-3000 hertz Bandpass circuit"), xlabel("Time (s)"),
-ylabel("Voltage (V)")
+High_pass2 = filter(b2, a2,y3); % Simulate system
