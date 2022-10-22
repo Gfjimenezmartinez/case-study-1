@@ -1,15 +1,16 @@
 %create treble boost using high pass 3 kHz-14 kHz
-
-%3000 hertz high pass circuit
-R=53;
+%
+%14000 hertz high pass circuit
+R=11.4;
 C=1e-6;
 tau= R*C;
+
 fs= 44100; %frequency (standard audio sampling rate)
 ts=0:1/fs:15*tau; %time sample frequency(given:15*tau)
 t=0:1/fs:15; %time sample frequency(given:15*tau)
 delta_t=1/fs; %given deltaT=1/fs
-N=35;
-%part b (iii)compute using isim 
+N=7;
+
 % Vin3=ones(size(ts,2),1);
 Vin3= [1 zeros(1,N)];  
 
@@ -18,12 +19,11 @@ Vin3= [1 zeros(1,N)];
 a1=[1 1/tau];% coefficients of Vin terms High pass
 b1=[1 0];%coefficients of Vout terms; High pass
 y_1 = lsim(b1,a1,Vin3,ts);
-%
-%14000 hertz high pass circuit
-R2=11.4;
-C2=1e-6;
-tau2= R*C;
 
+%3000 hertz high pass circuit
+R=53;
+C=1e-6;
+tau= R*C;
 a1=[1 1/tau];% coefficients of Vin terms High pass
 b1=[1 0];%coefficients of Vout terms; High pass
 y_2 = lsim(b1,a1,y_1,ts);
