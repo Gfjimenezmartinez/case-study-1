@@ -1,57 +1,40 @@
-%1st bandpass
-%910 hertz
-
-R= 174.8955;
+%230 hertz low pass circuit
+R=692;
 C=1e-6;
 tau= R*C;
+
 fs= 44100; %frequency (standard audio sampling rate)
 ts=0:1/fs:15*tau; %time sample frequency(given:15*tau)
 delta_t=1/fs; %given deltaT=1/fs
+
 % 
+N=457;
+%part b (iii)compute using isim 
 % Vin3=ones(size(ts,2),1);
-N=115;
-% % %part b (iii)compute using isim 
 Vin3= [1 zeros(1,N)];  
 
-a1=[1 1/tau];% coefficients of Vin terms High pass
-b1=[1 0];%coefficients of Vout terms; High pass
-y1 = lsim(b1,a1,Vin3,ts);
-%
-%230 hertz low pass
-R= 691.9780;
-C=1e-6;
-tau= R*C;
 a2=[1 1/tau];% coefficients of Vin terms low  pass
 b2=[1/tau];%coefficients of Vout terms; low passy1 = lsim(b1,a1,Vin3,ts);
-y2 = lsim(b2,a2,y1,ts);
+y1= lsim(b2,a2,Vin3,ts);
 figure()
-plot(ts,y2), title("impulse response of 230-910 hertz Bandpass circuit"), xlabel("Time (s)"),
+plot(ts,y1), title("impulse response of 230 hertz lowpass circuit"), xlabel("Time (s)"),
 ylabel("Voltage (V)")
-%2nd bandpass
-%3000 hertz
-R=53.0516;
+
+%60 hertz low pass circuit
+R=2652.58;
 C=1e-6;
 tau= R*C;
-fs= 44100; %frequency (standard audio sampling rate)
 ts=0:1/fs:15*tau; %time sample frequency(given:15*tau)
 delta_t=1/fs; %given deltaT=1/fs
+
+N=1754;
+%part b (iii)compute using isim 
 % Vin3=ones(size(ts,2),1);
-N=35;
-% % % %part b (iii)compute using isim 
 Vin3= [1 zeros(1,N)];  
 
-a1=[1 1/tau];% coefficients of Vin terms High pass
-b1=[1 0];%coefficients of Vout terms; High pass
-y3 = lsim(b1,a1,Vin3,ts);
-
-%910 hertz
-R= 174.8955;
-C=1e-6;
-tau= R*C;
 a2=[1 1/tau];% coefficients of Vin terms low  pass
 b2=[1/tau];%coefficients of Vout terms; low passy1 = lsim(b1,a1,Vin3,ts);
-y4 = lsim(b2,a2,y3,ts);
-
+y2= lsim(b2,a2,Vin3,ts);
 figure()
-plot(ts,y4), title("impulse response of 910-3000 hertz Bandpass circuit"), xlabel("Time (s)"),
+plot(ts,y2), title("impulse response of 60 hertz lowpass circuit"), xlabel("Time (s)"),
 ylabel("Voltage (V)")
