@@ -1,0 +1,52 @@
+%60 hertz low pass circuit
+R=2652.58;
+C=1e-6;
+tau= R*C;
+fs= 44100; %frequency (standard audio sampling rate)
+ts=0:1/fs:15*tau; %time sample frequency(given:15*tau)
+delta_t=1/fs; %given deltaT=1/fs
+
+
+f1= 100;%frequency in hertz
+omega1=2*pi*f1;
+
+ly=length(signal_in10000);
+%Low pass
+a1=[1 -(1-delta_t/tau)];% coefficients of Vin terms low pass*
+b1=[delta_t/tau];%coefficients of Vout terms; low pass
+Lowpass_10000=filter(b1, a1, signal_in10000);
+%230 hertz low pass circuit
+R=692;
+C=1e-6;
+tau= R*C;
+
+%Low pass
+a1=[1 -(1-delta_t/tau)];% coefficients of Vin terms low pass*
+b1=[delta_t/tau];%coefficients of Vout terms; low pass
+Lowpass2_10000=filter(b1, a1, signal_in10000);
+
+%for vector to have the same legnth
+L=500:499+ly;
+
+% cutoff freq =
+z1=conv(Lowpass_10000,signal_in10000);z1=z1(L);%230 hertz cut-off
+z2=conv(Lowpass2_10000,signal_in10000);z2=z2(L);%60 hertz low pass circuit
+%
+% coef=[1 1];
+% extract the signal in each of the frequency band: 0~60, 60~230,
+% multiply each with the corresponding equalizer coeffs
+% entered and add up the scaled signal
+%
+yx=[z1 z2-z1];
+
+figure()
+% bode(yx,ts);
+% %
+% H1 = yx./signal_in10000;
+% subplot(2,1,1)
+% plot(abs(H1))
+% title("f: 100 hz magnitude: Low pass  60 Hz")
+% subplot(2,1,2)
+% plot(pi*angle((H1/pi)))
+% title("f: 100 hz phase angle: Low pass  60 Hz"), xlabel(""),ylabel("")
+
