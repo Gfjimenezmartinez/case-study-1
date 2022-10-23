@@ -2,8 +2,6 @@ clc
 clear all
 close all
 
-% Case Study 1 - Demo
-
 % load noisy audio data, then play recording
 [xv,xvfs] = audioread('Blue in Green with Siren.wav');  
 xv=xv(:,1);
