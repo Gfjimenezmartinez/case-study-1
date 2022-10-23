@@ -1,52 +1,47 @@
-%60 hertz low pass circuit
-R=2652.58;
-C=1e-6;
-tau= R*C;
-fs= 44100; %frequency (standard audio sampling rate)
-ts=0:1/fs:15*tau; %time sample frequency(given:15*tau)
-delta_t=1/fs; %given deltaT=1/fs
-
-
-f1= 100;%frequency in hertz
-omega1=2*pi*f1;
-
-ly=length(signal_in10000);
-%Low pass
-a1=[1 -(1-delta_t/tau)];% coefficients of Vin terms low pass*
-b1=[delta_t/tau];%coefficients of Vout terms; low pass
-Lowpass_10000=filter(b1, a1, signal_in10000);
+%%
 %230 hertz low pass circuit
 R=692;
 C=1e-6;
 tau= R*C;
 
+f1= 10;%frequency in hertz
+omega1=2*pi*f1;
+signal_in10=exp(j*omega1*ts);% Vin-complex exponential
+
+f4= 300;%frequency in hertz
+omega2=2*pi*f4;
+signal_in300=exp(j*omega2*ts);% Vin-complex exponential
+
 %Low pass
 a1=[1 -(1-delta_t/tau)];% coefficients of Vin terms low pass*
 b1=[delta_t/tau];%coefficients of Vout terms; low pass
-Lowpass2_10000=filter(b1, a1, signal_in10000);
+Lowpass2_300=filter(b1, a1, signal_in300);
+Lowpass2_10=filter(b1, a1, signal_in10);
 
-%for vector to have the same legnth
-L=500:499+ly;
+%60 hertz low pass circuit
+R=2652.58;
+C=1e-6;
+tau= R*C;
 
-% cutoff freq =
-z1=conv(Lowpass_10000,signal_in10000);z1=z1(L);%230 hertz cut-off
-z2=conv(Lowpass2_10000,signal_in10000);z2=z2(L);%60 hertz low pass circuit
-%
-% coef=[1 1];
-% extract the signal in each of the frequency band: 0~60, 60~230,
-% multiply each with the corresponding equalizer coeffs
-% entered and add up the scaled signal
-%
-yx=[z1 z2-z1];
+%Low pass
+a1=[1 -(1-delta_t/tau)];% coefficients of Vin terms low pass*
+b1=[delta_t/tau];%coefficients of Vout terms; low pass
+Lowpass_300=filter(b1, a1, Lowpass2_300);
+Lowpass_10=filter(b1, a1, Lowpass2_10);
 
+%magnitude of Low pass
 figure()
-% bode(yx,ts);
-% %
-% H1 = yx./signal_in10000;
-% subplot(2,1,1)
-% plot(abs(H1))
-% title("f: 100 hz magnitude: Low pass  60 Hz")
-% subplot(2,1,2)
-% plot(pi*angle((H1/pi)))
-% title("f: 100 hz phase angle: Low pass  60 Hz"), xlabel(""),ylabel("")
-
+H1 =Lowpass_10./signal_in10;
+H2 =Lowpass_300./signal_in300;
+subplot(4,1,1)
+plot(ts,abs(H1))
+title("f: 10 hz magnitude: Low pass  230 Hz")
+subplot(4,1,2)
+plot(pi*angle((H1/pi)))
+title("f: 10 hz phase angle: Low pass  230 Hz"), xlabel(""),ylabel("")
+subplot(4,1,3)
+plot(ts,abs(H2))
+title("f: 300 hz magnitude: Low pass  230 Hz")
+subplot(4,1,4)
+plot(pi*angle((H2/pi)))
+title("f: 300 hz phase angle: Low pass  230 Hz"), xlabel(""),ylabel("")
